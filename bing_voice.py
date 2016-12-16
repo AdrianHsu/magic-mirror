@@ -14,6 +14,7 @@ from monotonic import monotonic
 #from urllib.request import Request, urlopen, URLError, HTTPError
 try:
 # For Python 3.0 and later
+   import urllib
    from urllib.parse import urlencode
    from urllib.request import urlopen, Request, URLError, HTTPError
 except ImportError:
@@ -159,14 +160,18 @@ class BingVoice():
                    "User-Agent": "TTSForPython"}
 
         url = "https://speech.platform.bing.com/synthesize"
-        request = Request(url, data=body, headers=headers)
-        try:
-            response = urlopen(request)
-        except HTTPError as e:
-            raise RequestError("tts request failed: {0}".format(
-                getattr(e, "reason", "status {0}".format(e.code))))  # use getattr to be compatible with Python 2.6
-        except URLError as e:
-            raise RequestError("tts connection failed: {0}".format(e.reason))
+        # request = Request(url, data=body, headers=headers)
+        # try:
+        #     response = urlopen(request)
+        # except HTTPError as e:
+        #     raise RequestError("tts request failed: {0}".format(
+        #         getattr(e, "reason", "status {0}".format(e.code))))  # use getattr to be compatible with Python 2.6
+        # except URLError as e:
+        #     raise RequestError("tts connection failed: {0}".format(e.reason))
+        data = urllib.parse.urlencode(headers)
+        binary_data = data.encode('utf-8')
+        req = urllib.request.Request(url, data=None, headers=binary_data)
+        response = urlopen(req)
 
         data = response.read()
 
