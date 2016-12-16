@@ -9,17 +9,17 @@ import uuid
 import wave
 import io
 from monotonic import monotonic
-from urllib.parse import urlencode
+#from urllib.parse import urlencode
 #from urllib2 import Request, urlopen, URLError, HTTPError
-from urllib.request import Request, urlopen, URLError, HTTPError
-#try:
+#from urllib.request import Request, urlopen, URLError, HTTPError
+try:
 # For Python 3.0 and later
-#   from urllib.parse import urlencode
-#   from urllib.request import urlopen, Request, URLError, HTTPError
-#except ImportError:
+   from urllib.parse import urlencode
+   from urllib.request import urlopen, Request, URLError, HTTPError
+except ImportError:
 # Fall back to Python 2's urllib2
-#   from urllib import urlencode
-#   from urllib2 import urlopen
+   from urllib import urlencode
+   from urllib2 import urlopen, Request, URLError, HTTPError
 
 # get a key from https://www.microsoft.com/cognitive-services/en-us/speech-api
 BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     try:
         text = bing.recognize(frames, language='en-US')
         #print('Bing:' + text.encode('utf-8'))
-        print('Bing:' + text)
+        print(text)
     except UnknownValueError:
         print("Microsoft Bing Voice Recognition could not understand audio")
     except RequestError as e:
