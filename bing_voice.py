@@ -9,8 +9,9 @@ import uuid
 import wave
 import io
 from monotonic import monotonic
-from urllib import urlencode
-from urllib2 import Request, urlopen, URLError, HTTPError
+from urllib.parse import urlencode
+#from urllib2 import Request, urlopen, URLError, HTTPError
+from urllib.request import Request, urlopen, URLError, HTTPError
 #try:
 # For Python 3.0 and later
 #   from urllib.parse import urlencode
@@ -211,7 +212,8 @@ if __name__ == '__main__':
     # recognize speech using Microsoft Bing Voice Recognition
     try:
         text = bing.recognize(frames, language='en-US')
-        print('Bing:' + text.encode('utf-8'))
+        #print('Bing:' + text.encode('utf-8'))
+        print('Bing:' + text)
     except UnknownValueError:
         print("Microsoft Bing Voice Recognition could not understand audio")
     except RequestError as e:
