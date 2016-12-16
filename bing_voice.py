@@ -3,7 +3,7 @@ Bing Speech To Text (STT) and Text To Speech (TTS)
 
 based on https://github.com/Uberi/speech_recognition
 '''
-
+import sys
 import json
 import uuid
 import wave
@@ -98,7 +98,7 @@ class BingVoice():
 
             self.expire_time = start_time + expiry_seconds
 
-    def recognize(self, audio_data, language="en-US", show_all=False):
+    def recognize(self, audio_data, language="en-US", show_all=False): #adrian: zh-TW?
         self.auth()
         wav_data = self.to_wav(audio_data)
         url = "https://speech.platform.bing.com/recognize/query?{0}".format(urlencode({
@@ -189,7 +189,6 @@ class BingVoice():
 
 
 if __name__ == '__main__':
-    import sys
 
     if len(sys.argv) != 2:
         print('Usage: %s 16k_mono.wav' % sys.argv[0])
