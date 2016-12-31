@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # In[1]:
-
+import os
 import sys
 import PyQt5
 import feedparser
@@ -199,9 +199,9 @@ class Page3Widget(QtWidgets.QWidget):
         layout.addWidget(self.label)
         self.button = QtWidgets.QPushButton('goto Page1')
         layout.addWidget(self.button)
-        self.record_button = QtWidgets.QPushButton('start record')
-        self.record_button.clicked.connect(self.record_start)
-        layout.addWidget(self.record_button)
+        #self.record_button = QtWidgets.QPushButton('start record')
+        #self.record_button.clicked.connect(self.record_start)
+        #layout.addWidget(self.record_button)
 
         self.label2 = QLabel("Hello 秉鈞, How are you today?")
         self.label2.setFont(QFont("Avenir Next",60,QFont.Normal))
@@ -211,61 +211,59 @@ class Page3Widget(QtWidgets.QWidget):
         self.setLayout(layout)
 
     def record_start(self):
-        #os.system("arecord -r 16000 -f S16_LE tmp.wav")
-        # cmd = "arecord -r 16000 -f S16_LE tmp.wav"
-        # proc = subprocess.Popen(cmd, shell=True)
-        # time.sleep(3)
-        # print("test")
-        # os.system("pkill -9 arecord")
-        # proc.terminate()
-        # print("record done!")
-        # self.label2.setText("speech recognition")
-        # os.system("python3 bing_voice.py tmp.wav")
-        # filename = "result.txt"
-        # with open(filename) as f:
-        #     data = f.readlines()
-        data = ["what's the weather like", "tmp"]
+        cmd = "arecord -r 16000 -f S16_LE tmp.wav"
+        proc = subprocess.Popen(cmd, shell=True)
+        time.sleep(7)
+        print("test")
+        os.system("pkill -9 arecord")
+        proc.terminate()
+        print("record done!")
+        self.label2.setText("speech recognition")
+        os.system("python3 bing_voice.py tmp.wav > result.txt")
+        filename = "result.txt"
+        with open(filename) as f:
+            data = f.readlines()
         result = data[0] #what's the weather like
         self.label2.setText(result)
-        print("set text done")
+        print("set text done:" + result)
         result.replace(' ', ',')
-        speak_out(result)
-        if "hello" in result:
-            speak_out("hello")
-        elif "name" in result:
-            speak_out("your,name,is,adrian")
-        elif "weather" in result:
-            speak_out("I,dont,know")
+        #speak_out(result)
+        #if "hello" in result:
+        #   speak_out("hello")
+        #elif "name" in result:
+        #    speak_out("your,name,is,adrian")
+        #elif "weather" in result:
+        #    speak_out("I,dont,know")
 
-    def speak_out(self, mystr):
-        BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
-        CHUNK_SIZE = 2048
-
-        # if len(sys.argv) < 2:
-        #     print('Usage: python %s text_to_convert' % sys.argv[0])
-        #     sys.exit(-1)
-        bing = BingVoice(BING_KEY)
-        data = bing.synthesize(mystr)
-
-        pa = pyaudio.PyAudio()
-        stream = pa.open(format=pyaudio.paInt16,
-                         channels=1,
-                         rate=16000,
-                         output=True,
-                         # output_device_index=1,
-                         frames_per_buffer=CHUNK_SIZE)
-
-        stream.write(data)
-        stream.close()
-
-        # if len(sys.argv) >= 3:
-        wf = wave.open(mystr, 'wb')
-        wf.setframerate(16000)
-        wf.setnchannels(1)
-        wf.setsampwidth(2)
-
-        wf.writeframes(data)
-        wf.close()
+#    def speak_out(self, mystr):
+#        BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
+#        CHUNK_SIZE = 2048
+#
+#        # if len(sys.argv) < 2:
+#        #     print('Usage: python %s text_to_convert' % sys.argv[0])
+#        #     sys.exit(-1)
+#        bing = BingVoice(BING_KEY)
+#        data = bing.synthesize(mystr)
+#
+#        pa = pyaudio.PyAudio()
+#        stream = pa.open(format=pyaudio.paInt16,
+#                         channels=1,
+#                         rate=16000,
+#                         output=True,
+#                         # output_device_index=1,
+#                         frames_per_buffer=CHUNK_SIZE)
+#
+#        stream.write(data)
+#        stream.close()
+#
+#        # if len(sys.argv) >= 3:
+#        wf = wave.open(mystr, 'wb')
+#        wf.setframerate(16000)
+#        wf.setnchannels(1)
+#        wf.setsampwidth(2)
+#
+#        wf.writeframes(data)
+#        wf.close()
 
 
 if __name__ == '__main__':
