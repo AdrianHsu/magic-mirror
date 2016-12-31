@@ -12,14 +12,16 @@ from monotonic import monotonic
 #from urllib.parse import urlencode
 #from urllib2 import Request, urlopen, URLError, HTTPError
 #from urllib.request import Request, urlopen, URLError, HTTPError
-try:
-# For Python 3.0 and later
-   from urllib.parse import urlencode
-   from urllib.request import urlopen, Request, URLError, HTTPError
-except ImportError:
+# try:
+# # For Python 3.0 and later
+#    import urllib
+#    from urllib.parse import urlencode
+#    from urllib.request import urlopen, Request, URLError, HTTPError
+# except ImportError:
 # Fall back to Python 2's urllib2
-   from urllib import urlencode
-   from urllib2 import urlopen, Request, URLError, HTTPError
+import urllib
+from urllib import urlencode
+from urllib2 import urlopen, Request, URLError, HTTPError
 
 # get a key from https://www.microsoft.com/cognitive-services/en-us/speech-api
 BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
@@ -167,6 +169,10 @@ class BingVoice():
                 getattr(e, "reason", "status {0}".format(e.code))))  # use getattr to be compatible with Python 2.6
         except URLError as e:
             raise RequestError("tts connection failed: {0}".format(e.reason))
+        # data = urllib.parse.urlencode(headers)
+        # binary_data = data.encode('utf-8')
+        # req = urllib.request.Request(url, data=None, headers=binary_data)
+        # response = urlopen(req)
 
         data = response.read()
 
