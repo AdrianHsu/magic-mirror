@@ -14,6 +14,7 @@ import time
 from PyQt5 import QtGui, QtCore
 from PyQt5 import QtWidgets
 
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -36,7 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
         cb = QPushButton('Switch', self)
         cb.move(20, 20)
         cb.clicked.connect(self.add_entry)
-        
+        # self.showFullScreen()
+
         palette = self.palette()
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
@@ -99,6 +101,21 @@ class Page1Widget(QtWidgets.QWidget):
         layout.addWidget(self.label2)
         layout.addWidget(self.lcd)
 
+        # class WebPage(QtWebEngineWidgets.QWebEnginePage):
+        #     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceId):
+        #         #Send the log entry to Python's logging or do whatever you want
+        #         logging.info("level: {}, source: {}, "+
+        #                  "line: {}, message: {}".format(level,
+        #                                                 sourceId,
+        #                                                lineNumber,
+        #                                                message))
+        # self.webView = QtWebEngineWidgets.QWebEngineView(self)
+        # path = "file:///Users/AdrianHsu/Google_Drive/NTUEE_105_1/eslab/magic-mirror/annyang/demo/index.html"
+        # self.webView.load(QtCore.QUrl(path))
+        # self.webView.setObjectName("webView")
+
+        # layout.addWidget(self.webView)
+
         layoutInner = QGridLayout()
         taipei, weather, temperature, weather_image = self.retrieveWeather()
         self.label_location2 = QLabel(taipei)
@@ -132,7 +149,7 @@ class Page1Widget(QtWidgets.QWidget):
         url = "http://www.cwb.gov.tw/V7/observe/24real/Data/46692.htm"
         page = urlopen(url)
 
-        soup = BeautifulSoup(page)
+        soup = BeautifulSoup(page, "lxml")
 
         #print(soup.prettify())
         #print(soup.tr.prettify())
@@ -142,8 +159,7 @@ class Page1Widget(QtWidgets.QWidget):
 
         url_image = "http://www.cwb.gov.tw/V7/life/Life_N.htm"
         page_image = urlopen(url_image)
-        soup_image = BeautifulSoup(page_image)
-
+        soup_image = BeautifulSoup(page_image, "lxml")
         #print(soup_image.prettify())
         taipei_weather = soup_image.find_all('tr')[2]
         taipei = taipei_weather.th.contents[0]
