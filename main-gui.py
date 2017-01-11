@@ -226,23 +226,23 @@ class Page3Widget(QtWidgets.QWidget):
         layout.addWidget(self.label2)
         self.setLayout(layout)
 
-    def record_start(self):
-        cmd = "arecord -r 16000 -f S16_LE tmp.wav"
-        proc = subprocess.Popen(cmd, shell=True)
-        time.sleep(7)
-        print("test")
-        os.system("pkill -9 arecord")
-        proc.terminate()
-        print("record done!")
-        self.label2.setText("speech recognition")
-        os.system("python3 bing_voice.py tmp.wav > result.txt")
-        filename = "result.txt"
-        with open(filename) as f:
-            data = f.readlines()
-        result = data[0] #what's the weather like
-        self.label2.setText(result)
-        print("set text done:" + result)
-        result.replace(' ', ',')
+#    def record_start(self):
+#        cmd = "arecord -r 16000 -f S16_LE tmp.wav"
+#        proc = subprocess.Popen(cmd, shell=True)
+#        time.sleep(7)
+#        print("test")
+#        os.system("pkill -9 arecord")
+#        proc.terminate()
+#        print("record done!")
+#        self.label2.setText("speech recognition")
+#        os.system("python3 bing_voice.py tmp.wav > result.txt")
+#        filename = "result.txt"
+#        with open(filename) as f:
+#            data = f.readlines()
+#        result = data[0] #what's the weather like
+#        self.label2.setText(result)
+#        print("set text done:" + result)
+#        result.replace(' ', ',')
         #speak_out(result)
         #if "hello" in result:
         #   speak_out("hello")
