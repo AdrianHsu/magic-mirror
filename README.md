@@ -66,3 +66,6 @@ sudo hciconfig hci0 up
 Download the nodejs code and run it:
 
 sudo node eddystone-beacon.js
+
+---
+https://wolfpaulus.com/embedded/raspberrypi2-translator/
