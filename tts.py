@@ -4,7 +4,7 @@ import sys
 import wave
 
 # get a key from https://www.microsoft.com/cognitive-services/en-us/speech-api
-BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
+BING_KEY = '09a9a703b07e4e55a0e71c363e59f5c5'
 CHUNK_SIZE = 2048
 
 if len(sys.argv) < 2:
