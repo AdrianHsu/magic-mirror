@@ -24,8 +24,8 @@ from pathlib import Path
 from time import strftime, localtime
 #for tts.py
 #from bing_voice import *
-import pyaudio
-import wave
+#import pyaudio
+#import wave
 
 
 class MainWindow(QtWidgets.QMainWindow):
