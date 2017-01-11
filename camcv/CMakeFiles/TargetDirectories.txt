@@ -1,0 +1,3 @@
+/home/pi/camcv/CMakeFiles/edit_cache.dir
+/home/pi/camcv/CMakeFiles/rebuild_cache.dir
+/home/pi/camcv/CMakeFiles/camcv.dir
