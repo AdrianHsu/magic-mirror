@@ -1,4 +1,5 @@
 # coding: utf-8
+# written by AdrianHsu
 
 # In[1]:
 import os
@@ -9,7 +10,6 @@ import requests
 import json
 import subprocess
 import time
-# written by AdrianHsu
 
 from PyQt5 import QtGui, QtCore
 from PyQt5 import QtWidgets
@@ -81,13 +81,10 @@ class Page1Widget(QtWidgets.QWidget):
         timer.start(10)
  
         self.lcd = QtWidgets.QLCDNumber(self)
-#         self.resize(375,130)
         self.lcd.resize(375,100)
         self.lcd.setDigitCount(8)
         self.lcd.setStyleSheet("color: white")
-#         self.lcd.setFont(QFont("Helvetica",80,QFont.Bold))  
-#Added self.lcd.move and moved the clock 30px down to make space for buttons
-#         self.lcd.move(0,30)
+
         self.lcd.display(strftime("%H"+":"+"%M"+":"+"%S"))
         self.lcd.setSegmentStyle(2)
         self.lcd.setFrameStyle(QFrame.NoFrame);
@@ -100,21 +97,6 @@ class Page1Widget(QtWidgets.QWidget):
 
         layout.addWidget(self.label2)
         layout.addWidget(self.lcd)
-
-        # class WebPage(QtWebEngineWidgets.QWebEnginePage):
-        #     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceId):
-        #         #Send the log entry to Python's logging or do whatever you want
-        #         logging.info("level: {}, source: {}, "+
-        #                  "line: {}, message: {}".format(level,
-        #                                                 sourceId,
-        #                                                lineNumber,
-        #                                                message))
-        # self.webView = QtWebEngineWidgets.QWebEngineView(self)
-        # path = "file:///Users/AdrianHsu/Google_Drive/NTUEE_105_1/eslab/magic-mirror/annyang/demo/index.html"
-        # self.webView.load(QtCore.QUrl(path))
-        # self.webView.setObjectName("webView")
-
-        # layout.addWidget(self.webView)
 
         layoutInner = QGridLayout()
         taipei, weather, temperature, weather_image = self.retrieveWeather()
@@ -225,61 +207,6 @@ class Page3Widget(QtWidgets.QWidget):
 
         layout.addWidget(self.label2)
         self.setLayout(layout)
-
-#    def record_start(self):
-#        cmd = "arecord -r 16000 -f S16_LE tmp.wav"
-#        proc = subprocess.Popen(cmd, shell=True)
-#        time.sleep(7)
-#        print("test")
-#        os.system("pkill -9 arecord")
-#        proc.terminate()
-#        print("record done!")
-#        self.label2.setText("speech recognition")
-#        os.system("python3 bing_voice.py tmp.wav > result.txt")
-#        filename = "result.txt"
-#        with open(filename) as f:
-#            data = f.readlines()
-#        result = data[0] #what's the weather like
-#        self.label2.setText(result)
-#        print("set text done:" + result)
-#        result.replace(' ', ',')
-        #speak_out(result)
-        #if "hello" in result:
-        #   speak_out("hello")
-        #elif "name" in result:
-        #    speak_out("your,name,is,adrian")
-        #elif "weather" in result:
-        #    speak_out("I,dont,know")
-
-#    def speak_out(self, mystr):
-#        BING_KEY = '15e52d8feeff44baac29e191e3d8c432'
-#        CHUNK_SIZE = 2048
-#
-#        # if len(sys.argv) < 2:
-#        #     print('Usage: python %s text_to_convert' % sys.argv[0])
-#        #     sys.exit(-1)
-#        bing = BingVoice(BING_KEY)
-#        data = bing.synthesize(mystr)
-#
-#        pa = pyaudio.PyAudio()
-#        stream = pa.open(format=pyaudio.paInt16,
-#                         channels=1,
-#                         rate=16000,
-#                         output=True,
-#                         # output_device_index=1,
-#                         frames_per_buffer=CHUNK_SIZE)
-#
-#        stream.write(data)
-#        stream.close()
-#
-#        # if len(sys.argv) >= 3:
-#        wf = wave.open(mystr, 'wb')
-#        wf.setframerate(16000)
-#        wf.setnchannels(1)
-#        wf.setsampwidth(2)
-#
-#        wf.writeframes(data)
-#        wf.close()
 
 
 if __name__ == '__main__':
