@@ -38,16 +38,37 @@ class MainWindow(QtWidgets.QMainWindow):
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
         self.setPalette(palette)
-        
-        page1_widget = Page1Widget(self)
-        self.central_widget.addWidget(page1_widget)
+
+        page0_widget = Page0Widget(self)
+        page0_widget.button.clicked.connect(self.gotopage1)
+        self.central_widget.addWidget(page0_widget)
+        self.central_widget.setCurrentWidget(page0_widget)
+        # page1_widget = Page1Widget(self)
+        # self.central_widget.addWidget(page1_widget)
+        self.cam(page0_widget)
+    def cam(self, pself):
+        os.system("../camcv/camcv ../../bryan_dp/faces.csv 0 3000 > username.txt")
+        time.sleep(20)
+        print("done!")
+        filename = "username.txt"
+        with open(filename) as f:
+            data = f.readlines()
+        # result = data[0]
+        result = "Adrian"
+        print("done read!, you are " + result)
+        pself.status_label.setFont(QFont("Avenir Next",14, QFont.Normal))
+        pself.status_label.setStyleSheet("color: white")
+        pself.status_label.setText("完成！歡迎您，" + result)
+        time.sleep(3)        
+        MainWindow.tmp = 10000001
+
     def mousePressEvent(self, event):
-        if MainWindow.tmp == 1:
+        if MainWindow.tmp == 10000001:
             page2_widget = Page2Widget(self)
             self.central_widget.addWidget(page2_widget)
             self.central_widget.setCurrentWidget(page2_widget)
             MainWindow.tmp += 1
-        elif MainWindow.tmp == 2:
+        elif MainWindow.tmp == 10000002:
             page3_widget = Page3Widget(self) 
             self.central_widget.addWidget(page3_widget)
             self.central_widget.setCurrentWidget(page3_widget)
@@ -56,33 +77,28 @@ class MainWindow(QtWidgets.QMainWindow):
             page1_widget = Page1Widget(self)
             self.central_widget.addWidget(page1_widget)
             self.central_widget.setCurrentWidget(page1_widget)
-            MainWindow.tmp = 1
-    def gotopage2(self):
-        page2_widget = Page2Widget(self)
-        # page2_widget.button.clicked.connect(self.gotopage3)
-        page2_widget.clicked.connect(self.gotopage3)
-        self.central_widget.addWidget(page2_widget)
-        self.central_widget.setCurrentWidget(page2_widget)
-        
+            MainWindow.tmp = 10000001
     def gotopage1(self):
         page1_widget = Page1Widget(self)
-        # page1_widget.button.clicked.connect(self.gotopage2)
-        # page1_widget.clicked.connect(self.gotopage2)
         self.central_widget.addWidget(page1_widget)
         self.central_widget.setCurrentWidget(page1_widget)
-    def gotopage3(self):
-        page3_widget = Page3Widget(self)
-        # page3_widget.button.clicked.connect(self.gotopage1)
-        # page3_widget.clicked.connect(self.gotopage1)
-        self.central_widget.addWidget(page3_widget)
-        self.central_widget.setCurrentWidget(page3_widget)
-
     def add_entry(self):
         if self.windowState() & QtCore.Qt.WindowFullScreen:
             self.showNormal()
         else:
             self.showFullScreen()
-    
+
+class Page0Widget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(Page0Widget, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.status_label = QLabel('正在辨識您的身份...')
+        self.button = QtWidgets.QPushButton('goto page 1')
+        layout.addWidget(self.status_label)
+        layout.addWidget(self.button)
+
+        self.setLayout(layout)
+
 class Page1Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page1Widget, self).__init__(parent)
@@ -183,8 +199,6 @@ class Page2Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page2Widget, self).__init__(parent)
         layout = QHBoxLayout()
-        self.label = QLabel('in page2')
-        layout.addWidget(self.label)
         # self.button = QtWidgets.QPushButton('goto Page3')
         # layout.addWidget(self.button)
         
@@ -222,8 +236,6 @@ class Page3Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page3Widget, self).__init__(parent)
         layout = QGridLayout()
-        self.label = QLabel('in page3')
-        layout.addWidget(self.label)
         # self.button = QtWidgets.QPushButton('goto Page1')
         # layout.addWidget(self.button)
         self.record_button = QtWidgets.QPushButton('start record')
@@ -259,7 +271,7 @@ class Page3Widget(QtWidgets.QWidget):
             self.label2.setText(result)
             print(result)
             if result.find("song") != -1:
-                if result.find("play") != -1:
+                if result.find("play") != -1 or result.find("sing") != -1:
                     self.playAudio("faded.wav")
                 else:
                     self.stopAudio()
