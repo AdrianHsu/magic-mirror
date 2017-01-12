@@ -23,45 +23,57 @@ from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from pathlib import Path
 from time import strftime, localtime
-#for tts.py
-#from bing_voice import *
-#import pyaudio
-#import wave
-
 
 class MainWindow(QtWidgets.QMainWindow):
+    tmp = 1
     def __init__(self):
         super(MainWindow, self).__init__()
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
-        cb = QPushButton('Switch', self)
-        cb.move(20, 20)
-        cb.clicked.connect(self.add_entry)
+        # cb = QPushButton('Switch', self)
+        # cb.move(20, 20)
+        # cb.clicked.connect(self.add_entry)
         # self.showFullScreen()
-
         palette = self.palette()
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
         self.setPalette(palette)
         
         page1_widget = Page1Widget(self)
-        page1_widget.button.clicked.connect(self.gotopage2)
         self.central_widget.addWidget(page1_widget)
-
+    def mousePressEvent(self, event):
+        if MainWindow.tmp == 1:
+            page2_widget = Page2Widget(self)
+            self.central_widget.addWidget(page2_widget)
+            self.central_widget.setCurrentWidget(page2_widget)
+            MainWindow.tmp += 1
+        elif MainWindow.tmp == 2:
+            page3_widget = Page3Widget(self) 
+            self.central_widget.addWidget(page3_widget)
+            self.central_widget.setCurrentWidget(page3_widget)
+            MainWindow.tmp += 1
+        else:
+            page1_widget = Page1Widget(self)
+            self.central_widget.addWidget(page1_widget)
+            self.central_widget.setCurrentWidget(page1_widget)
+            MainWindow.tmp = 1
     def gotopage2(self):
         page2_widget = Page2Widget(self)
-        page2_widget.button.clicked.connect(self.gotopage3)
+        # page2_widget.button.clicked.connect(self.gotopage3)
+        page2_widget.clicked.connect(self.gotopage3)
         self.central_widget.addWidget(page2_widget)
         self.central_widget.setCurrentWidget(page2_widget)
         
     def gotopage1(self):
         page1_widget = Page1Widget(self)
-        page1_widget.button.clicked.connect(self.gotopage2)
+        # page1_widget.button.clicked.connect(self.gotopage2)
+        # page1_widget.clicked.connect(self.gotopage2)
         self.central_widget.addWidget(page1_widget)
         self.central_widget.setCurrentWidget(page1_widget)
     def gotopage3(self):
         page3_widget = Page3Widget(self)
-        page3_widget.button.clicked.connect(self.gotopage1)
+        # page3_widget.button.clicked.connect(self.gotopage1)
+        # page3_widget.clicked.connect(self.gotopage1)
         self.central_widget.addWidget(page3_widget)
         self.central_widget.setCurrentWidget(page3_widget)
 
@@ -75,7 +87,9 @@ class Page1Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page1Widget, self).__init__(parent)
         layout = QGridLayout()
-        self.button = QtWidgets.QPushButton('goto Page2')
+        # self.button = QtWidgets.QPushButton('goto Page2')
+        # layout.addWidget(self.button)
+
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.Time)
         timer.start(10)
@@ -118,10 +132,9 @@ class Page1Widget(QtWidgets.QWidget):
         layoutInner.addWidget(self.label_location2)
         layoutInner.addWidget(self.label_weather)
         layout.addLayout(layoutInner, 0, 1)
-        layout.addWidget(self.button)
         
         self.setLayout(layout)
-        
+
 # Expanded window height by 30px
 #         self.setGeometry(300,300,375,130)
 
@@ -172,8 +185,8 @@ class Page2Widget(QtWidgets.QWidget):
         layout = QHBoxLayout()
         self.label = QLabel('in page2')
         layout.addWidget(self.label)
-        self.button = QtWidgets.QPushButton('goto Page3')
-        layout.addWidget(self.button)
+        # self.button = QtWidgets.QPushButton('goto Page3')
+        # layout.addWidget(self.button)
         
         url = 'http://news.google.com.br/news?pz=1&cf=all&ned=tw&hl=zh&output=rss'
         feed = feedparser.parse(url)
@@ -210,8 +223,8 @@ class Page3Widget(QtWidgets.QWidget):
         layout = QGridLayout()
         self.label = QLabel('in page3')
         layout.addWidget(self.label)
-        self.button = QtWidgets.QPushButton('goto Page1')
-        layout.addWidget(self.button)
+        # self.button = QtWidgets.QPushButton('goto Page1')
+        # layout.addWidget(self.button)
         self.record_button = QtWidgets.QPushButton('start record')
         self.record_button.clicked.connect(self.record_start)
         layout.addWidget(self.record_button)
