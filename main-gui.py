@@ -269,9 +269,9 @@ class Page3Widget(QtWidgets.QWidget):
         print("done decision!")
 
     def playAudio(self, filename):
-        play_cmd = ['aplay', '-D', 'plughw:1,0', filename]
+        play_cmd = ['aplay', filename]
         Page3Widget.p1 = subprocess.Popen(play_cmd,shell=False)
-    def stopAudio():
+    def stopAudio(self):
         Page3Widget.p1.terminate()
 
     def retrieveWeather(self):
