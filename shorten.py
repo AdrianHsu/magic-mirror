@@ -15,7 +15,7 @@ for post in feed.entries:
    #print(post.keys())
 
 def goo_shorten_url(url):
-   post_url = 'https://www.googleapis.com/urlshortener/v1/url'
+   post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
    payload = {'longUrl': url}
    headers = {'content-type': 'application/json'}
    r = requests.post(post_url, data=json.dumps(payload), headers=headers)
