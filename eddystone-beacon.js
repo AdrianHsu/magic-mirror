@@ -1,6 +1,6 @@
-// by Adrian Hsu
 var eddystoneBeacon = require('eddystone-beacon');
-var url = 'https://goo.gl/T3QufX';
+var url = process.argv[2]
 
-eddystoneBeacon.advertiseUrl(url, [options]);
-console.log('Beacon is running!');
+eddystoneBeacon.advertiseUrl(url);
+
+console.log('Beacon is running: ' + url);

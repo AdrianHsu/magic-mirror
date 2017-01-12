@@ -165,7 +165,7 @@ class Page1Widget(QtWidgets.QWidget):
         print(strftime("%A"))
         return taipei, weather, temperature, weather_image
         # urlretrieve()
-        
+
 class Page2Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page2Widget, self).__init__(parent)
@@ -191,10 +191,10 @@ class Page2Widget(QtWidgets.QWidget):
         self.setLayout(layout)
         short = self.goo_shorten_url(first_href)
         self.startBLE(short)
-
+       	
     def startBLE(self, short):
-        print(short)
-        
+        proc = subprocess.Popen("sudo node eddystone-beacon.js " + short, shell = True) 
+        #proc.kill()
     def goo_shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
         payload = {'longUrl': url}
@@ -230,11 +230,14 @@ class Page3Widget(QtWidgets.QWidget):
         self.record_button.setText("record done!")
         print("record done!")
         os.system("python3 ./transcribe/transcribe.py ./test.wav > result.txt")
+        time.sleep(7)
         filename = "result.txt"
         with open(filename) as f:
             data = f.readlines()
-        result = data[0] #what's the weather like
         self.record_button.setText("transcribe done! wanna record again?")
+        result = ""
+        if len(data) != 0:
+            result = data[0] #what's the weather like
         if result == "":
             self.label2.setText("I don't understand, please repeat")
         else:
