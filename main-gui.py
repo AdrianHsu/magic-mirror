@@ -210,12 +210,20 @@ class Page3Widget(QtWidgets.QWidget):
     
     def record_start(self):
         self.record_button.setText("start record!")
-        os.system("arecord -f S16_LE -d 5 -r 44100 -D hw:1,0 ./transcribe/resources/test.wav")
-        time.sleep(7)
+        os.system("arecord -f S16_LE -d 3 -r 44100 -D hw:1,0 ./test.wav")
+        time.sleep(5)
         self.record_button.setText("record done!")
         print("record done!")
-        os.system("python3 ./transcribe/transcribe.py ./transcribe/resources/test.wav")
-        self.record_button.setText("transcribe done!")
+        os.system("python3 ./transcribe/transcribe.py ./test.wav > result.txt")
+        filename = "result.txt"
+        with open(filename) as f:
+            data = f.readlines()
+        result = data[0] #what's the weather like
+        self.record_button.setText("transcribe done! wanna record again?")
+        if result == "":
+            self.label2.setText("I don't understand, please repeat")
+        else:
+            self.label2.setText(result)
         print("done transcribe!")
 
 if __name__ == '__main__':
