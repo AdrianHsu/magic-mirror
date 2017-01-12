@@ -47,7 +47,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.central_widget.addWidget(page1_widget)
         self.cam(page0_widget)
     def cam(self, pself):
-        os.system("../camcv/camcv ../../bryan_dp/faces.csv 0 3000 > username.txt")
+        os.system("../camcv/camcv ../bryan_dp/faces.csv 0 3000 > username.txt")
         time.sleep(20)
         print("done!")
         filename = "username.txt"
