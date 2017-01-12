@@ -197,9 +197,9 @@ class Page3Widget(QtWidgets.QWidget):
         layout.addWidget(self.label)
         self.button = QtWidgets.QPushButton('goto Page1')
         layout.addWidget(self.button)
-        #self.record_button = QtWidgets.QPushButton('start record')
-        #self.record_button.clicked.connect(self.record_start)
-        #layout.addWidget(self.record_button)
+        self.record_button = QtWidgets.QPushButton('start record')
+        self.record_button.clicked.connect(self.record_start)
+        layout.addWidget(self.record_button)
 
         self.label2 = QLabel("Hello 秉鈞, How are you today?")
         self.label2.setFont(QFont("Avenir Next",60,QFont.Normal))
@@ -207,7 +207,15 @@ class Page3Widget(QtWidgets.QWidget):
 
         layout.addWidget(self.label2)
         self.setLayout(layout)
-
+    
+    def record_start(self):
+        self.record_button.clicked.setText("start record!")
+        os.system("arecord -f S16_LE -d 5 -r 44100 -D hw:1,0 ./trascribe/resources/test.wav")
+        self.record_button.clicked.setText("record done!")
+        print("record done!")
+        os.system("python3 ./trascribe/transcribe.py ./trascribe/resources/test.wav")
+        self.record_button.clicked.setText("transcribe done!")
+        print("done transcribe!")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

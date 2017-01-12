@@ -75,7 +75,10 @@ def main(speech_file):
     # [END construct_request]
     # [START send_request]
     response = service_request.execute()
-    print(json.dumps(response))
+    # myjson = json.dumps(response)
+    newData = response['results']['alternatives']['transcript'];
+
+    print(newData)
     # [END send_request]
 
 
