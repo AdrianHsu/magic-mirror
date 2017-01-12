@@ -24,8 +24,11 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 from time import strftime, localtime
 
+finalname = ""
+
 class MainWindow(QtWidgets.QMainWindow):
     tmp = 1
+    global finalname
     def __init__(self):
         super(MainWindow, self).__init__()
         self.central_widget = QtWidgets.QStackedWidget()
@@ -47,18 +50,19 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.central_widget.addWidget(page1_widget)
         self.cam(page0_widget)
     def cam(self, pself):
-        os.system("../camcv/camcv ../bryan_dp/faces.csv 0 3000 > username.txt")
-        time.sleep(20)
+        global finalname
+        os.system("./camcv bryan_dp/faces.csv 0 3000 > username.txt")
+        time.sleep(10)
         print("done!")
         filename = "username.txt"
         with open(filename) as f:
             data = f.readlines()
-        # result = data[0]
-        result = "Adrian"
+        result = data[0]
         print("done read!, you are " + result)
         pself.status_label.setFont(QFont("Avenir Next",14, QFont.Normal))
         pself.status_label.setStyleSheet("color: white")
         pself.status_label.setText("完成！歡迎您，" + result)
+        finalname = result
         time.sleep(3)        
         MainWindow.tmp = 10000001
 
@@ -211,7 +215,7 @@ class Page2Widget(QtWidgets.QWidget):
                 first_href = post.links[0]['href']
             str = str + "\n" + post.title
         self.label_news = QLabel(str)
-        self.label_news.setFont(QFont("Avenir Next",14, QFont.Normal))
+        self.label_news.setFont(QFont("Avenir Next",32, QFont.Normal))
         self.label_news.setStyleSheet("color: white")
         layout.addWidget(self.label_news)
 	
@@ -220,7 +224,7 @@ class Page2Widget(QtWidgets.QWidget):
         self.startBLE(short)
        	
     def startBLE(self, short):
-        proc = subprocess.Popen("sudo node eddystone-beacon.js " + short, shell = True) 
+        proc = subprocess.Popen("node eddystone-beacon.js " + short, shell = True) 
         #proc.kill()
     def goo_shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
@@ -233,7 +237,9 @@ class Page2Widget(QtWidgets.QWidget):
  
 class Page3Widget(QtWidgets.QWidget):
     p1 = 0
+    global finalname
     def __init__(self, parent=None):
+        global finalname
         super(Page3Widget, self).__init__(parent)
         layout = QGridLayout()
         # self.button = QtWidgets.QPushButton('goto Page1')
@@ -241,8 +247,8 @@ class Page3Widget(QtWidgets.QWidget):
         self.record_button = QtWidgets.QPushButton('start record')
         self.record_button.clicked.connect(self.record_start)
         layout.addWidget(self.record_button)
-
-        self.label2 = QLabel("Hello 秉鈞, How are you today?")
+        print("??" + finalname)
+        self.label2 = QLabel("Hello " + finalname + ", How are you today?")
         self.label2.setFont(QFont("Avenir Next",60,QFont.Normal))
         self.label2.setStyleSheet("color: white")
 
