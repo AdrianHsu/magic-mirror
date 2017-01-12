@@ -27,7 +27,7 @@ include_directories(/opt/vc/userland-master)
 include_directories(/opt/vc/userland-master/interface/vcos)
 include_directories(/opt/vc/userland-master/interface/vcos/pthreads)
 include_directories(/opt/vc/userland-master/interface/vmcs_host/linux)
-include_directories(/home/pi/camcv)
+include_directories(/home/pi/magic-mirror/camcv)
 
 add_executable(camcv RaspiCamControl.c RaspiCLI.c RaspiPreview.c camcv_vid1.cpp
 RaspiTex.c RaspiTexUtil.c tga.c ${GL_SCENE_SOURCES})

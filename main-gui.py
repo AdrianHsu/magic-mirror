@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # cb = QPushButton('Switch', self)
         # cb.move(20, 20)
         # cb.clicked.connect(self.add_entry)
-        self.showFullScreen()
+        #self.showFullScreen()
         palette = self.palette()
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
