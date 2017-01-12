@@ -189,17 +189,20 @@ class Page2Widget(QtWidgets.QWidget):
         layout.addWidget(self.label_news)
 	
         self.setLayout(layout)
-        short = goo_shorten_url(self, first_href)
-        startBLE(self, short)
+        short = self.goo_shorten_url(first_href)
+        self.startBLE(short)
 
     def startBLE(self, short):
         print(short)
+        
     def goo_shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
         payload = {'longUrl': url}
         headers = {'content-type': 'application/json'}
         r = requests.post(post_url, data=json.dumps(payload), headers=headers)
-        return r.text
+        myjson = json.loads(r.text)
+        short = myjson['id']
+        return short
  
 class Page3Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
