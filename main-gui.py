@@ -240,11 +240,11 @@ class Page3Widget(QtWidgets.QWidget):
     def record_start(self):
         self.record_button.setText("start record!")
         os.system("arecord -f S16_LE -d 3 -r 44100 -D hw:1,0 ./test.wav")
-        time.sleep(5)
+        time.sleep(4)
         self.record_button.setText("record done!")
         print("record done!")
         os.system("python3 ./transcribe/transcribe.py ./test.wav > result.txt")
-        time.sleep(7)
+        time.sleep(5)
         filename = "result.txt"
         with open(filename) as f:
             data = f.readlines()
@@ -257,24 +257,22 @@ class Page3Widget(QtWidgets.QWidget):
             self.label2.setText("I don't understand, please repeat")
         else:
             self.label2.setText(result)
-            if result.contains("song"):
-                if result.contains("play"):
-                    p1 = playAudio("faded.mp3")
+            print(result)
+            if result.find("song") != -1:
+                if result.find("play") != -1:
+                    self.playAudio("faded.wav")
                 else:
-                    stopAudio(p1)
-            elif result.contains("weather"):
+                    self.stopAudio()
+            elif result.find("weather") != -1:
                 taipei, weather, temperature, weather_image = self.retrieveWeather()
-                self.label2 = QLabel(taipei + " " + temperature +", "+ weather)
-                self.label2.setFont(QFont("Avenir Next",40,QFont.Normal))
-                self.label2.setStyleSheet("color: white")         
+                self.label2.setText(taipei + " " + temperature +", "+ weather)
         print("done decision!")
 
-    def playAudio(filename):
+    def playAudio(self, filename):
         play_cmd = ['aplay', '-D', 'plughw:1,0', filename]
-        p1 = subprocess.Popen(play_cmd,shell=False)
-        return p1
-    def stopAudio(p1):
-        p1.terminate()
+        Page3Widget.p1 = subprocess.Popen(play_cmd,shell=False)
+    def stopAudio():
+        Page3Widget.p1.terminate()
 
     def retrieveWeather(self):
         url = "http://www.cwb.gov.tw/V7/observe/24real/Data/46692.htm"
