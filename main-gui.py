@@ -209,12 +209,13 @@ class Page3Widget(QtWidgets.QWidget):
         self.setLayout(layout)
     
     def record_start(self):
-        self.record_button.clicked.setText("start record!")
-        os.system("arecord -f S16_LE -d 5 -r 44100 -D hw:1,0 ./trascribe/resources/test.wav")
-        self.record_button.clicked.setText("record done!")
+        self.record_button.setText("start record!")
+        os.system("arecord -f S16_LE -d 5 -r 44100 -D hw:1,0 ./transcribe/resources/test.wav")
+        time.sleep(7)
+        self.record_button.setText("record done!")
         print("record done!")
-        os.system("python3 ./trascribe/transcribe.py ./trascribe/resources/test.wav")
-        self.record_button.clicked.setText("transcribe done!")
+        os.system("python3 ./transcribe/transcribe.py ./transcribe/resources/test.wav")
+        self.record_button.setText("transcribe done!")
         print("done transcribe!")
 
 if __name__ == '__main__':
