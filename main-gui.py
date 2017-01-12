@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # cb = QPushButton('Switch', self)
         # cb.move(20, 20)
         # cb.clicked.connect(self.add_entry)
-        # self.showFullScreen()
+        self.showFullScreen()
         palette = self.palette()
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
@@ -95,7 +95,7 @@ class Page1Widget(QtWidgets.QWidget):
         timer.start(10)
  
         self.lcd = QtWidgets.QLCDNumber(self)
-        self.lcd.resize(375,100)
+        self.lcd.resize(200,80)
         self.lcd.setDigitCount(8)
         self.lcd.setStyleSheet("color: white")
 
@@ -317,7 +317,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWindow()
     w.setWindowTitle("Magic Mirror")
-    w.resize(640, 480)
+    w.resize(420, 300)
     w.show()
     sys.exit(app.exec_())
 

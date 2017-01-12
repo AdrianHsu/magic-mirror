@@ -84,6 +84,9 @@ int im_height;		// image height
 int PREDICTION_SEUIL ;
 char key;	
 bool video_show = true;
+bool load_model = true;
+vector<int> person;
+int predict_result;
 
 Mat gray,frame,face,face_resized;
 vector<Mat> images;
@@ -169,7 +172,7 @@ void trace(string s)
 {
 	if (TRACE==1)
 	{
-		cout<<s<<"\n";
+//		cout<<s<<"\n";
 	}
 }
 /////////////////////////////////////////////////
@@ -206,11 +209,11 @@ static void read_csv(const string& filename, vector<Mat>& images, vector<int>& l
     // I prefer my old good char* ...
     // (what a pity)
 	char sTmp[128];
-    sprintf(sTmp,"(init) %d pictures read to train",nLine);
+//    sprintf(sTmp,"(init) %d pictures read to train",nLine);
     trace((string)(sTmp));
 	for (int j=0;j<MAX_PEOPLE;j++)
 	{
-		sprintf(sTmp,"(init) %d pictures of %s (%d) read to train",nPictureById[j],people[j].c_str(),j);
+//		sprintf(sTmp,"(init) %d pictures of %s (%d) read to train",nPictureById[j],people[j].c_str(),j);
    	 	trace((string)(sTmp));
 	}
 }
@@ -231,7 +234,7 @@ static void default_status(RASPIVID_STATE *state)
    memset(state, 0, sizeof(RASPIVID_STATE));
 
    // Now set anything non-zero
-   state->timeout 			= 65000;     // capture time : here 65 s
+   state->timeout 			= 5000;     // capture time : here 5 s
    state->width 			= 320;      // use a multiple of 320 (640, 1280)
    state->height 			= 240;		// use a multiple of 240 (480, 960)
    state->bitrate 			= 17000000; // This is a decent default bitrate for 1080p
@@ -334,7 +337,19 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		if (prediction<MAX_PEOPLE)
 		{
 			box_text = "Id="+people[prediction];
-			cout << people[prediction] << endl;
+//			cout << people[prediction] << endl;
+			person.push_back(prediction);
+			int count0 = 0, count1 = 0;
+			for ( int i = 0; i < person.size(); i++)
+			{
+				if ( person[i] == 0)
+					count0++;
+				if ( person[i] == 1)
+					count1++;
+			}	
+			if (count0 > count1)
+				predict_result = 0;
+			else predict_result = 1;
 		}
 		else
 		{
@@ -644,9 +659,9 @@ int main(int argc, const char **argv)
 	//
 	// see thinkrpi.wordpress.com, articles on Magic Mirror to understand this command line and parameters
 	//
-	cout<<"start\n";
+//	cout<<"start\n";
 	   if ((argc != 4)&&(argc!=3)) {
-	       cout << "usage: " << argv[0] << " ext_files  seuil(opt) \n files.ext histo(0/1) 5000 \n" << endl;
+//	       cout << "usage: " << argv[0] << " ext_files  seuil(opt) \n files.ext histo(0/1) 5000 \n" << endl;	       exit(1);
 	       exit(1);
 	   }
 	
@@ -684,12 +699,12 @@ int main(int argc, const char **argv)
 	//fn_haar = "/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml";
 	// change fn_harr to be quicker LBP (see article)
 	fn_haar = "/usr/share/opencv/lbpcascades/lbpcascade_frontalface.xml";
-	DEBUG cout<<"(OK) csv="<<fn_csv<<"\n";
+//	DEBUG cout<<"(OK) csv="<<fn_csv<<"\n";
 	
     // Read in the data (fails if no valid input filename is given, but you'll get an error message):
     try {
         read_csv(fn_csv, images, labels);
-		DEBUG cout<<"(OK) read CSV ok\n";
+//		DEBUG cout<<"(OK) read CSV ok\n";
     	} 
     catch (cv::Exception& e) 
     {
@@ -709,21 +724,25 @@ int main(int argc, const char **argv)
 	// this a Eigen model, but you could replace with Fisher model (in this case
 	// threshold value should be lower) (try)	
 	
-    //	Fisherfaces model; 
-    
+	//	Fisherfaces model; 
+
     // train the model with your nice collection of pictures	
     trace("(init) start train images");
-    //model.load("model.xml");
+    if (load_model)
+	model.load("model.xml");
     //if (model.getLabelInfo(0) == "")
     //    cout << "Can't load model.xml" << endl;
+    else
+    {
         model.train(images, labels);
         model.save("model.xml");
-    trace("(init) train images : ok");
+    }
+	trace("(init) train images : ok");
  
 	// load face model
     if (!face_cascade.load(fn_haar))
    	{
-    			cout <<"(E) face cascade model not loaded :"+fn_haar+"\n"; 
+    			//cout <<"(E) face cascade model not loaded :"+fn_haar+"\n"; 
     			return -1;
     }
     trace("(init) Load modele : ok");
@@ -845,8 +864,11 @@ int main(int argc, const char **argv)
 	cvReleaseImage(&pv_big);
 	
 	secondsElapsed = difftime(timer_end,timer_begin);
-	
-	printf ("%.f seconds for %d frames : FPS = %f\n", secondsElapsed,nCount,(float)((float)(nCount)/secondsElapsed));
+//	cout << "============================================" << endl;
+//	cout << "Person predicted: " << people[predict_result] << endl;	
+//	cout << "============================================" << endl;
+	cout << people[predict_result] << endl;
+//	printf ("%.f seconds for %d frames : FPS = %f\n", secondsElapsed,nCount,(float)((float)(nCount)/secondsElapsed));
 		
    return 0;
 }
