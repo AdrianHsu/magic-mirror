@@ -218,6 +218,7 @@ class Page2Widget(QtWidgets.QWidget):
         return short
  
 class Page3Widget(QtWidgets.QWidget):
+    p1 = 0
     def __init__(self, parent=None):
         super(Page3Widget, self).__init__(parent)
         layout = QGridLayout()
@@ -249,13 +250,70 @@ class Page3Widget(QtWidgets.QWidget):
             data = f.readlines()
         self.record_button.setText("transcribe done! wanna record again?")
         result = ""
+        print("done transcribe!")
         if len(data) != 0:
             result = data[0] #what's the weather like
         if result == "":
             self.label2.setText("I don't understand, please repeat")
         else:
             self.label2.setText(result)
-        print("done transcribe!")
+            if result.contains("song"):
+                if result.contains("play"):
+                    p1 = playAudio("faded.mp3")
+                else:
+                    stopAudio(p1)
+            elif result.contains("weather"):
+                taipei, weather, temperature, weather_image = self.retrieveWeather()
+                self.label2 = QLabel(taipei + " " + temperature +", "+ weather)
+                self.label2.setFont(QFont("Avenir Next",40,QFont.Normal))
+                self.label2.setStyleSheet("color: white")         
+        print("done decision!")
+
+    def playAudio(filename):
+        play_cmd = ['aplay', '-D', 'plughw:1,0', filename]
+        p1 = subprocess.Popen(play_cmd,shell=False)
+        return p1
+    def stopAudio(p1):
+        p1.terminate()
+
+    def retrieveWeather(self):
+        url = "http://www.cwb.gov.tw/V7/observe/24real/Data/46692.htm"
+        page = urlopen(url)
+
+        soup = BeautifulSoup(page, "lxml")
+
+        #print(soup.prettify())
+        #print(soup.tr.prettify())
+        latest_observe = soup.find_all('tr')[1]
+        print("觀測時間：2016/%s" %latest_observe.th.contents[0])
+        print("溫度：%sºC" %latest_observe.td.contents[0])
+
+        url_image = "http://www.cwb.gov.tw/V7/life/Life_N.htm"
+        page_image = urlopen(url_image)
+        soup_image = BeautifulSoup(page_image, "lxml")
+        #print(soup_image.prettify())
+        taipei_weather = soup_image.find_all('tr')[2]
+        taipei = taipei_weather.th.contents[0]
+        weather_text = taipei_weather.td.contents[0]['title']
+        weather_image = "http://www.cwb.gov.tw"+taipei_weather.td.contents[0]['src']
+
+        image_path = Path("weather_image/"+weather_image[-6:])
+        if not image_path.is_file():
+            print(weather_image)
+            urlretrieve(weather_image, "weather_image/"+weather_image[-6:])
+        weather_ptr = 0
+        temperature_ptr_begin = weather_text.find('<BR>')+5
+        temperature_ptr_end = weather_text.find('<BR>',temperature_ptr_begin)
+        weather = weather_text[:temperature_ptr_begin-6]
+        temperature = weather_text[temperature_ptr_begin:temperature_ptr_end]
+        print(taipei)
+        print(weather)
+        print(temperature)
+        print(weather_image[-6:])
+        print(strftime("%Y %b %d %H:%M:%S", localtime()))
+        print(strftime("%A"))
+        return taipei, weather, temperature, weather_image
+        # urlretrieve()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
