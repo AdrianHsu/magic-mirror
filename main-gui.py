@@ -178,17 +178,29 @@ class Page2Widget(QtWidgets.QWidget):
         url = 'http://news.google.com.br/news?pz=1&cf=all&ned=tw&hl=zh&output=rss'
         feed = feedparser.parse(url)
         str = ""
+        first_href = ""
         for post in feed.entries:
+            if first_href == "":
+                first_href = post.links[0]['href']
             str = str + "\n" + post.title
         self.label_news = QLabel(str)
         self.label_news.setFont(QFont("Avenir Next",14, QFont.Normal))
         self.label_news.setStyleSheet("color: white")
         layout.addWidget(self.label_news)
-
+	
         self.setLayout(layout)
-        
-        
-        
+        short = goo_shorten_url(self, first_href)
+        startBLE(self, short)
+
+    def startBLE(self, short):
+        print(short)
+    def goo_shorten_url(self, url):
+        post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
+        payload = {'longUrl': url}
+        headers = {'content-type': 'application/json'}
+        r = requests.post(post_url, data=json.dumps(payload), headers=headers)
+        return r.text
+ 
 class Page3Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page3Widget, self).__init__(parent)
