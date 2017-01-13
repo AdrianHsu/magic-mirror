@@ -42,14 +42,14 @@ class MainWindow(QtWidgets.QMainWindow):
         palette.setColor(role, QColor('black'))
         self.setPalette(palette)
 
-        # page0_widget = Page0Widget(self)
-        # page0_widget.button.clicked.connect(self.gotopage1)
-        # self.central_widget.addWidget(page0_widget)
-        # self.central_widget.setCurrentWidget(page0_widget)
-        # self.cam(page0_widget)
-        page1_widget = Page1Widget(self)
-        self.central_widget.addWidget(page1_widget)
-        self.central_widget.setCurrentWidget(page1_widget)
+        page0_widget = Page0Widget(self)
+        page0_widget.button.clicked.connect(self.gotopage1)
+        self.central_widget.addWidget(page0_widget)
+        self.central_widget.setCurrentWidget(page0_widget)
+        self.cam(page0_widget)
+        #page1_widget = Page1Widget(self)
+        #self.central_widget.addWidget(page1_widget)
+        #self.central_widget.setCurrentWidget(page1_widget)
 
     def cam(self, pself):
         global finalname
@@ -228,10 +228,14 @@ class Page2Widget(QtWidgets.QWidget):
 	
         self.setLayout(layout)
         short = self.goo_shorten_url(first_href)
-        self.startBLE(short)
+        print(short)
+        location = first_href.rfind("http")
+        first_href = first_href[location:]
+        print(first_href)
+        self.startBLE(first_href)
        	
     def startBLE(self, short):
-        proc = subprocess.Popen("node eddystone-beacon.js " + short, shell = True) 
+        proc = subprocess.Popen("sudo node eddystone-beacon.js https://google.com", shell = True) 
         #proc.kill()
     def goo_shorten_url(self, url):
         post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
