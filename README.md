@@ -6,6 +6,8 @@
 ## 題目
 <b>Magic Mirror （醜男鏡）</b>
 
+![member](./cover.png)
+
 ## 成員
 <b> B03901023  電機三  許秉鈞,  B03901041 電機三 王文謙</b>
 ![member](./member.jpg)
