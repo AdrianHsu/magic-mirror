@@ -42,13 +42,15 @@ class MainWindow(QtWidgets.QMainWindow):
         palette.setColor(role, QColor('black'))
         self.setPalette(palette)
 
-        page0_widget = Page0Widget(self)
-        page0_widget.button.clicked.connect(self.gotopage1)
-        self.central_widget.addWidget(page0_widget)
-        self.central_widget.setCurrentWidget(page0_widget)
-        # page1_widget = Page1Widget(self)
-        # self.central_widget.addWidget(page1_widget)
-        self.cam(page0_widget)
+        # page0_widget = Page0Widget(self)
+        # page0_widget.button.clicked.connect(self.gotopage1)
+        # self.central_widget.addWidget(page0_widget)
+        # self.central_widget.setCurrentWidget(page0_widget)
+        # self.cam(page0_widget)
+        page1_widget = Page1Widget(self)
+        self.central_widget.addWidget(page1_widget)
+        self.central_widget.setCurrentWidget(page1_widget)
+
     def cam(self, pself):
         global finalname
         os.system("./camcv bryan_dp/faces.csv 0 3000 > username.txt")
@@ -59,20 +61,18 @@ class MainWindow(QtWidgets.QMainWindow):
             data = f.readlines()
         result = data[0]
         print("done read!, you are " + result)
-        pself.status_label.setFont(QFont("Avenir Next",14, QFont.Normal))
-        pself.status_label.setStyleSheet("color: white")
-        pself.status_label.setText("歡迎您，" + result)
+        pself.status_label.setText("辨識身份確認。歡迎您，" + result)
         finalname = result
         time.sleep(3)        
-        MainWindow.tmp = 10000001
+        MainWindow.tmp = 1
 
     def mousePressEvent(self, event):
-        if MainWindow.tmp == 10000001:
+        if MainWindow.tmp == 1:
             page2_widget = Page2Widget(self)
             self.central_widget.addWidget(page2_widget)
             self.central_widget.setCurrentWidget(page2_widget)
             MainWindow.tmp += 1
-        elif MainWindow.tmp == 10000002:
+        elif MainWindow.tmp == 2:
             page3_widget = Page3Widget(self) 
             self.central_widget.addWidget(page3_widget)
             self.central_widget.setCurrentWidget(page3_widget)
@@ -81,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow):
             page1_widget = Page1Widget(self)
             self.central_widget.addWidget(page1_widget)
             self.central_widget.setCurrentWidget(page1_widget)
-            MainWindow.tmp = 10000001
+            MainWindow.tmp = 1
     def gotopage1(self):
         page1_widget = Page1Widget(self)
         self.central_widget.addWidget(page1_widget)
@@ -97,6 +97,8 @@ class Page0Widget(QtWidgets.QWidget):
         super(Page0Widget, self).__init__(parent)
         layout = QHBoxLayout()
         self.status_label = QLabel('正在辨識您的身份...')
+        self.status_label.setFont(QFont("Inconsolata",14, QFont.Normal))
+        self.status_label.setStyleSheet("color: white")
         self.button = QtWidgets.QPushButton('goto page 1')
         layout.addWidget(self.status_label)
         layout.addWidget(self.button)
@@ -115,10 +117,9 @@ class Page1Widget(QtWidgets.QWidget):
         timer.start(10)
  
         self.lcd = QtWidgets.QLCDNumber(self)
-        self.lcd.resize(200,80)
+
         self.lcd.setDigitCount(8)
         self.lcd.setStyleSheet("color: white")
-
         self.lcd.display(strftime("%H"+":"+"%M"+":"+"%S"))
         self.lcd.setSegmentStyle(2)
         self.lcd.setFrameStyle(QFrame.NoFrame);
@@ -126,33 +127,33 @@ class Page1Widget(QtWidgets.QWidget):
         day = QDate.currentDate().toString()
         print(day)
         self.label2 = QLabel(day)
-        self.label2.setFont(QFont("Avenir Next",60,QFont.Normal))
+        self.label2.setFont(QFont("Inconsolata", 60, QFont.Normal))
         self.label2.setStyleSheet("color: white")
-
-        layout.addWidget(self.label2)
-        layout.addWidget(self.lcd)
-
+        
         layoutInner = QGridLayout()
         taipei, weather, temperature, weather_image = self.retrieveWeather()
         self.label_location2 = QLabel(taipei)
-        self.label_location2.setFont(QFont("Avenir Next",60,QFont.Normal))
+        self.label_location2.setFont(QFont("Inconsolata",40, QFont.Normal))
         self.label_location2.setStyleSheet("color: white") 
         self.label_weather = QLabel(temperature +", "+ weather)
-        self.label_weather.setFont(QFont("Avenir Next",60,QFont.Normal))
+        self.label_weather.setFont(QFont("Inconsolata", 40, QFont.Normal))
         self.label_weather.setStyleSheet("color: white")         
         pic = QLabel(self)
 #         pic.setGeometry(10, 10, 64, 64)
         #use full ABSOLUTE path to the image, not relative
         tmp = QtGui.QPixmap("./assets/Rain.png")
 #         tmp = QtGui.QPixmap("./weather_image/" + weather_image[-6:])
-        tmp2 = tmp.scaled(64, 64, QtCore.Qt.KeepAspectRatio)
+        tmp2 = tmp.scaled(80, 80, QtCore.Qt.KeepAspectRatio)
         pic.setPixmap(tmp2)
-        layoutInner.addWidget(pic)
-        
-        layoutInner.addWidget(self.label_location2)
-        layoutInner.addWidget(self.label_weather)
-        layout.addLayout(layoutInner, 0, 1)
-        
+        layoutInner.addWidget(self.label2, 0, 0)
+        layoutInner.addWidget(self.label_weather, 1, 0)
+        layoutInner.addWidget(pic, 1, 1)
+        layoutInner.addWidget(self.label_location2, 2, 0)
+
+        layout.addWidget(self.lcd, 3, 2)
+        self.lcd.setGeometry(QtCore.QRect(10, 30, 300, 400))
+        layout.addLayout(layoutInner, 0, 0)
+
         self.setLayout(layout)
 
 # Expanded window height by 30px
@@ -202,7 +203,7 @@ class Page1Widget(QtWidgets.QWidget):
 class Page2Widget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Page2Widget, self).__init__(parent)
-        layout = QHBoxLayout()
+        layout = QGridLayout()
         # self.button = QtWidgets.QPushButton('goto Page3')
         # layout.addWidget(self.button)
         
@@ -215,9 +216,15 @@ class Page2Widget(QtWidgets.QWidget):
                 first_href = post.links[0]['href']
             str = str + "\n" + post.title
         self.label_news = QLabel(str)
-        self.label_news.setFont(QFont("Avenir Next",32, QFont.Normal))
+        self.label_news.setFont(QFont("Inconsolata",14, QFont.Normal))
         self.label_news.setStyleSheet("color: white")
-        layout.addWidget(self.label_news)
+        self.label = QLabel("本日焦點新聞")
+        self.label.setFont(QFont("Inconsolata",50, QFont.Normal))
+        self.label.setStyleSheet("color: white")
+        self.null_label = QLabel("")
+        layout.addWidget(self.label, 0, 0)
+        layout.addWidget(self.label_news, 1, 0)
+        layout.addWidget(self.null_label, 2, 0)
 	
         self.setLayout(layout)
         short = self.goo_shorten_url(first_href)
@@ -242,17 +249,26 @@ class Page3Widget(QtWidgets.QWidget):
         global finalname
         super(Page3Widget, self).__init__(parent)
         layout = QGridLayout()
+
+        layoutInner = QGridLayout()
         # self.button = QtWidgets.QPushButton('goto Page1')
         # layout.addWidget(self.button)
         self.record_button = QtWidgets.QPushButton('start record')
         self.record_button.clicked.connect(self.record_start)
-        layout.addWidget(self.record_button)
-        print("??" + finalname)
+        print("You are:" + finalname)
         self.label2 = QLabel("Hello " + finalname + ", How are you today?")
-        self.label2.setFont(QFont("Avenir Next",60,QFont.Normal))
+        self.label2.setFont(QFont("Inconsolata", 40, QFont.Normal))
         self.label2.setStyleSheet("color: white")
+        self.null_label1 = QLabel("")
+        self.null_label2 = QLabel("")
+        self.null_label3 = QLabel("")
 
-        layout.addWidget(self.label2)
+        layout.addWidget(self.label2, 0, 0)
+        layoutInner.addWidget(self.record_button, 1, 1)
+        layoutInner.addWidget(self.null_label1, 2, 0)
+        layoutInner.addWidget(self.null_label2, 1, 0)
+        layoutInner.addWidget(self.null_label3, 1, 2)
+        layout.addLayout(layoutInner, 1, 0)
         self.setLayout(layout)
     
     def record_start(self):
@@ -335,7 +351,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWindow()
     w.setWindowTitle("Magic Mirror")
-    w.resize(420, 300)
+    w.resize(640, 480)
     w.show()
     sys.exit(app.exec_())
 
