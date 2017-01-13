@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # cb = QPushButton('Switch', self)
         # cb.move(20, 20)
         # cb.clicked.connect(self.add_entry)
-        #self.showFullScreen()
+        self.showFullScreen()
         palette = self.palette()
         role = self.backgroundRole()
         palette.setColor(role, QColor('black'))
@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
         print("done read!, you are " + result)
         pself.status_label.setFont(QFont("Avenir Next",14, QFont.Normal))
         pself.status_label.setStyleSheet("color: white")
-        pself.status_label.setText("完成！歡迎您，" + result)
+        pself.status_label.setText("歡迎您，" + result)
         finalname = result
         time.sleep(3)        
         MainWindow.tmp = 10000001
