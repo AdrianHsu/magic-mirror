@@ -232,7 +232,8 @@ class Page2Widget(QtWidgets.QWidget):
         location = first_href.rfind("http")
         first_href = first_href[location:]
         print(first_href)
-        self.startBLE(first_href)
+        #self.startBLE(short)
+        self.startBLE("https://www.google.com")
        	
     def startBLE(self, short):
         proc = subprocess.Popen("sudo node eddystone-beacon.js " + short, shell = True) 
