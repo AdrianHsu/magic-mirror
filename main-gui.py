@@ -227,7 +227,7 @@ class Page2Widget(QtWidgets.QWidget):
         layout.addWidget(self.null_label, 2, 0)
 	
         self.setLayout(layout)
-        short = self.goo_shorten_url(first_href)
+        short = self.bitly_shorten_url(first_href)
         print(short)
         location = first_href.rfind("http")
         first_href = first_href[location:]
@@ -235,15 +235,16 @@ class Page2Widget(QtWidgets.QWidget):
         self.startBLE(first_href)
        	
     def startBLE(self, short):
-        proc = subprocess.Popen("sudo node eddystone-beacon.js https://google.com", shell = True) 
+        proc = subprocess.Popen("sudo node eddystone-beacon.js " + short, shell = True) 
         #proc.kill()
-    def goo_shorten_url(self, url):
-        post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBvNNRlboUoBx5-Q31mR8rSFyb4R00Jn2M'
-        payload = {'longUrl': url}
-        headers = {'content-type': 'application/json'}
-        r = requests.post(post_url, data=json.dumps(payload), headers=headers)
-        myjson = json.loads(r.text)
-        short = myjson['id']
+    def bitly_shorten_url(self, url):
+        query_params = {'access_token': '763e313dc7f60f693de1dbbe04bad650728d899a',
+                'longUrl': url} 
+        endpoint = 'https://api-ssl.bitly.com/v3/shorten'
+        response = requests.get(endpoint, params=query_params, verify=False)
+
+        data = json.loads(response.text)
+        short = data['data']['url']
         return short
  
 class Page3Widget(QtWidgets.QWidget):
